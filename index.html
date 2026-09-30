@@ -1,0 +1,613 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LKPD Interaktif - Perubahan Materi</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- HTML2PDF CDN for PDF Export -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#0284c7',
+                            600: '#0284c7',
+                            700: '#0369a1',
+                            800: '#075985',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            body {
+                background: white !important;
+                color: black !important;
+                padding: 0 !important;
+            }
+            .print-container {
+                box-shadow: none !important;
+                border: none !important;
+                padding: 0 !important;
+                width: 100% !important;
+            }
+            .page-break {
+                page-break-before: always;
+            }
+            select {
+                appearance: none;
+                -webkit-appearance: none;
+                border: none !important;
+                font-weight: bold;
+                background: transparent !important;
+            }
+            .print-exact {
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 font-sans text-slate-800 min-h-screen flex flex-col justify-between">
+
+    <header class="bg-gradient-to-r from-sky-700 via-indigo-700 to-blue-800 text-white shadow-lg no-print">
+        <div class="max-w-6xl mx-auto px-4 py-6 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3">
+                <div class="p-3 bg-white/10 rounded-2xl backdrop-blur-md border border-white/20">
+                    <i class="fa-solid font-flask-vial text-3xl text-sky-200"></i>
+                </div>
+                <div>
+                    <span class="bg-sky-400/30 text-sky-100 text-xs font-semibold px-2.5 py-0.5 rounded-full border border-sky-300/30">
+                        LKPD INTERAKTIF IPA
+                    </span>
+                    <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight">Perubahan Materi (Zat)</h1>
+                    <p class="text-xs md:text-sm text-sky-100 font-light">Klasifikasi Perubahan Fisika & Perubahan Kimia</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-2">
+                <button onclick="scrollToSection('materi-section')" class="text-xs bg-white/10 hover:bg-white/20 text-white px-3 py-2 rounded-lg transition font-medium flex items-center gap-1.5 border border-white/20">
+                    <i class="fa-solid fa-book-open"></i> Ringkasan Materi
+                </button>
+                <button onclick="scrollToSection('soal-section')" class="text-xs bg-amber-400 hover:bg-amber-500 text-slate-900 font-bold px-3 py-2 rounded-lg transition flex items-center gap-1.5 shadow-sm">
+                    <i class="fa-solid fa-pen-to-square"></i> Mulai Kuis
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 py-6 w-full flex-grow space-y-6" id="lkpd-content">
+
+        <!-- Student Identity Card -->
+        <section class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 print-container">
+            <div class="flex items-center justify-between border-b border-slate-200 pb-4 mb-4">
+                <div class="flex items-center gap-2">
+                    <i class="fa-solid fa-id-card text-sky-600 text-xl"></i>
+                    <h2 class="text-lg font-bold text-slate-800">Identitas Peserta Didik</h2>
+                </div>
+                <span class="text-xs text-slate-500 font-medium no-print">Lengkapi data Anda sebelum mengerjakan</span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div>
+                    <label for="student-name" class="block text-xs font-semibold text-slate-600 mb-1">Nama Lengkap <span class="text-rose-500">*</span></label>
+                    <input type="text" id="student-name" placeholder="Masukkan nama siswa" class="w-full text-sm px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition">
+                </div>
+                <div>
+                    <label for="student-class" class="block text-xs font-semibold text-slate-600 mb-1">Kelas / Semester <span class="text-rose-500">*</span></label>
+                    <input type="text" id="student-class" placeholder="Contoh: VII A / Genap" class="w-full text-sm px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition">
+                </div>
+                <div>
+                    <label for="student-absent" class="block text-xs font-semibold text-slate-600 mb-1">No. Absen / NISN</label>
+                    <input type="text" id="student-absent" placeholder="Masukkan nomor" class="w-full text-sm px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition">
+                </div>
+                <div>
+                    <label for="student-school" class="block text-xs font-semibold text-slate-600 mb-1">Nama Sekolah</label>
+                    <input type="text" id="student-school" placeholder="Nama sekolah / SMP / SMA" class="w-full text-sm px-3 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:border-sky-500 outline-none transition">
+                </div>
+            </div>
+            <div class="mt-4 flex justify-between items-center text-xs text-slate-500 pt-3 border-t border-slate-100">
+                <span id="date-display"><i class="fa-regular fa-calendar mr-1"></i> Tanggal: -</span>
+                <span class="text-sky-600 font-semibold"><i class="fa-solid fa-circle-check mr-1"></i> 20 Butir Soal Perubahan Materi</span>
+            </div>
+        </section>
+
+        <section id="materi-section" class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 no-print">
+            <div class="flex items-center justify-between cursor-pointer" onclick="toggleMateri()">
+                <div class="flex items-center gap-2">
+                    <div class="p-2 bg-amber-100 text-amber-700 rounded-lg">
+                        <i class="fa-solid fa-lightbulb text-lg"></i>
+                    </div>
+                    <div>
+                        <h2 class="text-base font-bold text-slate-800">Ringkasan Ringkas Materi: Perubahan Fisika vs Perubahan Kimia</h2>
+                        <p class="text-xs text-slate-500">Klik untuk membongkar atau menyembunyikan panduan belajar</p>
+                    </div>
+                </div>
+                <i id="materi-icon" class="fa-solid fa-chevron-down text-slate-400 transition-transform duration-300"></i>
+            </div>
+
+            <div id="materi-content" class="hidden mt-4 pt-4 border-t border-slate-100 grid grid-cols-1 md:grid-cols-2 gap-4 text-xs leading-relaxed text-slate-600">
+                <div class="bg-blue-50/70 p-4 rounded-xl border border-blue-200/60">
+                    <h3 class="font-bold text-blue-900 text-sm mb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-atom text-blue-600"></i> Perubahan Fisika
+                    </h3>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li><strong>Tidak menghasilkan zat baru</strong> (sifat kimia zat tetap sama).</li>
+                        <li>Dapat kembali ke bentuk semula (<em>reversible</em>).</li>
+                        <li>Meliputi perubahan wujud (menguap, membeku, mencair, menyublim), pemuaian/penyusutan, serta perubahan bentuk/ukuran fisik (seperti beras dipotong/digiling, kayu diukir).</li>
+                    </ul>
+                </div>
+                <div class="bg-emerald-50/70 p-4 rounded-xl border border-emerald-200/60">
+                    <h3 class="font-bold text-emerald-900 text-sm mb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-fire text-emerald-600"></i> Perubahan Kimia
+                    </h3>
+                    <ul class="list-disc list-inside space-y-1">
+                        <li><strong>Menghasilkan zat baru</strong> dengan sifat yang berbeda dari zat asal.</li>
+                        <li>Umumnya sukar/tidak dapat kembali ke bentuk awal (<em>irreversible</em>).</li>
+                        <li>Disertai tanda-tanda: terbentuk endapan, pembentukan gas, perubahan warna, perubahan suhu, pembakaran, pengaratan, fermentasi, pembusukan.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="soal-section" class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 print-container">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-4 mb-6">
+                <div>
+                    <h2 class="text-xl font-bold text-slate-800">Tabel Lembar Kerja Perubahan Materi</h2>
+                    <p class="text-xs text-slate-500 mt-0.5">Pilihlah opsi <strong>"Perubahan Fisika"</strong> atau <strong>"Perubahan Kimia"</strong> pada kolom dropdown di bawah ini.</p>
+                </div>
+                
+                <!-- Progress Tracker -->
+                <div class="no-print bg-slate-50 p-3 rounded-xl border border-slate-200 min-w-[220px]">
+                    <div class="flex justify-between text-xs font-semibold mb-1.5">
+                        <span class="text-slate-600">Progres Terisi:</span>
+                        <span id="progress-text" class="text-sky-600">0 / 20 Soal</span>
+                    </div>
+                    <div class="w-full bg-slate-200 rounded-full h-2.5 overflow-hidden">
+                        <div id="progress-bar" class="bg-sky-500 h-2.5 rounded-full transition-all duration-300" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Table of Questions -->
+            <div class="overflow-x-auto custom-scrollbar">
+                <table class="w-full text-left border-collapse text-sm">
+                    <thead>
+                        <tr class="bg-slate-100 text-slate-700 uppercase text-xs font-bold border-b-2 border-slate-200">
+                            <th class="py-3 px-3 text-center w-12">No</th>
+                            <th class="py-3 px-4">Peristiwa / Fenomena</th>
+                            <th class="py-3 px-4 w-64 md:w-72">Perubahan Materi</th>
+                            <th class="py-3 px-3 text-center w-24 no-print">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="quiz-table-body" class="divide-y divide-slate-200">
+                        <!-- Questions dynamically loaded here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="mt-8 flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-slate-200 no-print">
+                <button onclick="resetAnswers()" class="w-full sm:w-auto px-4 py-2.5 rounded-xl border border-slate-300 hover:bg-slate-100 text-slate-600 text-xs font-semibold transition flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-rotate-left"></i> Reset Semua Pilihan
+                </button>
+
+                <div class="flex items-center gap-3 w-full sm:w-auto">
+                    <button onclick="checkAnswers()" class="w-full sm:w-auto px-6 py-2.5 rounded-xl bg-sky-600 hover:bg-sky-700 active:bg-sky-800 text-white font-bold text-sm shadow-md transition flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-paper-plane"></i> Periksa & Nilai Hasil
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <section id="result-section" class="hidden bg-white rounded-2xl p-6 shadow-md border-2 border-sky-500 print-container">
+            <div class="border-b border-slate-200 pb-4 mb-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                <div>
+                    <span class="bg-emerald-100 text-emerald-800 text-xs font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">
+                        Hasil Evaluasi LKPD
+                    </span>
+                    <h2 class="text-2xl font-black text-slate-800 mt-2">Ringkasan & Penilaian</h2>
+                    <p class="text-xs text-slate-500">Berikut adalah analisis jawaban dan skor pengerjaan Anda.</p>
+                </div>
+                
+                <!-- Score Circle Badge -->
+                <div class="flex items-center gap-4 bg-slate-50 p-4 rounded-2xl border border-slate-200 w-full md:w-auto justify-center">
+                    <div class="text-center">
+                        <span class="block text-xs uppercase font-bold text-slate-500">Nilai Akhir</span>
+                        <span id="final-score" class="text-4xl font-extrabold text-sky-600">0</span>
+                        <span class="text-xs text-slate-400">/ 100</span>
+                    </div>
+                    <div class="h-10 w-[1px] bg-slate-300"></div>
+                    <div class="text-xs space-y-1">
+                        <div class="text-emerald-600 font-semibold flex items-center gap-1.5">
+                            <i class="fa-solid fa-circle-check"></i> Benar: <span id="correct-count">0</span>
+                        </div>
+                        <div class="text-rose-600 font-semibold flex items-center gap-1.5">
+                            <i class="fa-solid fa-circle-xmark"></i> Salah: <span id="wrong-count">0</span>
+                        </div>
+                        <div class="text-amber-600 font-semibold flex items-center gap-1.5">
+                            <i class="fa-solid fa-circle-question"></i> Kosong: <span id="empty-count">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Teacher Note / Predicate Feedback -->
+            <div id="feedback-box" class="p-4 rounded-xl mb-6 text-sm leading-relaxed border">
+                <!-- Dynamic feedback content -->
+            </div>
+
+            <!-- Action Buttons for Export & Print -->
+            <div class="flex flex-wrap items-center justify-between gap-3 no-print mb-6">
+                <button onclick="window.print()" class="px-5 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-900 text-white font-semibold text-xs transition flex items-center gap-2 shadow">
+                    <i class="fa-solid fa-print"></i> Cetak Lembar Hasil (Print)
+                </button>
+                
+                <button onclick="exportToPDF()" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs transition flex items-center gap-2 shadow">
+                    <i class="fa-solid fa-file-pdf"></i> Unduh Hasil sebagai PDF
+                </button>
+            </div>
+
+            <!-- Detailed Explanation Section -->
+            <div class="border-t border-slate-200 pt-6">
+                <h3 class="text-base font-bold text-slate-800 mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-list-check text-sky-600"></i> Kunci Jawaban & Pembahasan Detil
+                </h3>
+                <div id="explanations-list" class="space-y-3 text-xs">
+                    <!-- Dynamic detailed explanations -->
+                </div>
+            </div>
+
+            <!-- Signature block for printed PDF report -->
+            <div class="hidden print:block mt-12 pt-8 border-t border-slate-300">
+                <div class="grid grid-cols-2 text-center text-xs">
+                    <div>
+                        <p class="mb-12">Mengetahui,<br>Orang Tua / Wali Siswa</p>
+                        <p class="font-bold underline">( ________________________ )</p>
+                    </div>
+                    <div>
+                        <p class="mb-12">Guru Mata Pelajaran IPA</p>
+                        <p class="font-bold underline">( ________________________ )</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Custom Modal Dialog / Notification Toast -->
+    <div id="custom-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl max-w-sm w-full p-6 shadow-xl border border-slate-200 text-center animate-fade-in">
+            <div id="modal-icon" class="w-12 h-12 rounded-full mx-auto flex items-center justify-center text-2xl mb-3"></div>
+            <h3 id="modal-title" class="text-lg font-bold text-slate-800 mb-2"></h3>
+            <p id="modal-message" class="text-xs text-slate-600 mb-6 leading-relaxed"></p>
+            <div class="flex gap-2 justify-center" id="modal-actions">
+                <button onclick="closeModal()" class="px-5 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-xl text-xs font-semibold transition">
+                    Mengerti
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-white border-t border-slate-200 py-4 text-center text-xs text-slate-500 no-print mt-12">
+        <p>© 2026 Media Pembelajaran Interaktif IPA — Lembar Kerja Peserta Didik (LKPD)</p>
+    </footer>
+
+    <script>
+        const questionsData = [
+            { id: 1, text: "Air yang menguap", answer: "Fisika", reason: "Menguap adalah perubahan wujud dari cair menjadi gas. Molekul H2O tidak mengalami reaksi kimia sehingga sifat zatnya tetap sama." },
+            { id: 2, text: "Kain dijahit menjadi baju", answer: "Fisika", reason: "Perubahan hanya terjadi pada bentuk dan ukuran fisik benda, sedangkan bahan dasarnya (kain) tidak berubah menjadi zat baru." },
+            { id: 3, text: "Alkohol yang memuai", answer: "Fisika", reason: "Pemuaian adalah penambahan volume akibat kenaikan suhu tanpa mengubah susunan molekul kimia alkohol." },
+            { id: 4, text: "Beras yang digiling menjadi tepung beras", answer: "Fisika", reason: "Hanya terjadi perubahan ukuran butiran fisik dari kasar menjadi halus, komposisi kimia tepung tetap beras." },
+            { id: 5, text: "Obat nyamuk yang dibakar", answer: "Kimia", reason: "Proses pembakaran menghasilkan zat-zat baru seperti asap, abu, dan gas karbon dioksida/karbon monoksida." },
+            { id: 6, text: "Besi terkena air hujan hingga berkarat", answer: "Kimia", reason: "Pengaratan (korosi) merupakan reaksi oksidasi besi dengan air dan oksigen yang menghasilkan senyawa baru berupa besi(III) oksida." },
+            { id: 7, text: "Buah dibiarkan, lama kelamaan membusuk", answer: "Kimia", reason: "Pembusukan oleh mikroorganisme mengubah senyawa organik pada buah menjadi senyawa kimia baru berbau dan bertekstur lain." },
+            { id: 8, text: "Proses fotosintesis tumbuhan", answer: "Kimia", reason: "Reaksi kimia antara CO2 dan H2O dengan bantuan cahaya matahari menghasilkan zat baru berupa glukosa (C6H12O6) dan Oksigen (O2)." },
+            { id: 9, text: "Emas dileburkan lalu dicetak menjadi perhiasan", answer: "Fisika", reason: "Peleburan hanya mengubah wujud emas dari padat ke cair lalu kembali padat setelah dicetak tanpa membentuk zat baru." },
+            { id: 10, text: "Kayu dibuat menjadi meja dan kursi", answer: "Fisika", reason: "Perubahan hanya pada bentuk fisik kayu. Komposisi serat dan zat kimia pembentuk kayu tetap sama." },
+            { id: 11, text: "Mentega akan meleleh saat dipanaskan", answer: "Fisika", reason: "Meleleh adalah perubahan wujud dari padat menjadi cair akibat peningkatan suhu tanpa pembentukan zat baru." },
+            { id: 12, text: "Menyalakan sebatang kembang api sehingga kembang api berubah warna dan habis", answer: "Kimia", reason: "Reaksi pembakaran bahan piroteknik menghasilkan cahaya warna-warni, asap, dan zat abu/gas baru." },
+            { id: 13, text: "Kayu terbakar menjadi arang", answer: "Kimia", reason: "Pembakaran kayu menghasilkan zat baru berupa karbon/arang, asap, dan gas yang tidak dapat kembali menjadi kayu." },
+            { id: 14, text: "Menyalakan sebuah lilin sehingga sumbu lilin berubah warna dan habis", answer: "Kimia", reason: "Terbakarnya sumbu lilin merupakan reaksi pembakaran kimia yang menghasilkan abu dan gas (catatan: pencairan lilin adalah fisika, tetapi sumbu terbakar habis adalah perubahan kimia)." },
+            { id: 15, text: "Logam dipanaskan akan memuai", answer: "Fisika", reason: "Pemuaian termal hanya memperbesar volume/panjang logam akibat renggangnya partikel, susunan atom logam tidak berubah." },
+            { id: 16, text: "Meletakkan kapur barus di dalam kotak sehingga kotak menjadi berbau wangi", answer: "Fisika", reason: "Terjadi proses sublimasi (perubahan wujud dari padat langsung menjadi gas) tanpa menghasilkan zat kimia baru." },
+            { id: 17, text: "Membakar kertas, sehingga kertas berubah menjadi abu", answer: "Kimia", reason: "Kertas mengalami reaksi pembakaran yang mengubah serat selulosa menjadi abu dan gas karbon dioksida." },
+            { id: 18, text: "Sayur menjadi basi", answer: "Kimia", reason: "Proses fermentasi/pembusukan mikroba mengubah nutrisi sayur menjadi asam, gas berbau busuk, dan senyawa kimia baru." },
+            { id: 19, text: "Memanaskan es di dalam gelas kimia sehingga es berubah menjadi air", answer: "Fisika", reason: "Mencair merupakan perubahan wujud fisika dari padat ke cair, komposisi molekulnya tetap H2O." },
+            { id: 20, text: "Singkong difermentasi menjadi tape", answer: "Kimia", reason: "Ragi merobek karbohidrat kompleks pada singkong melalui reaksi fermentasi menjadi glukosa, alkohol, dan asam organik." }
+        ];
+
+        window.addEventListener('DOMContentLoaded', () => {
+            // Set default date
+            const today = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('date-display').innerHTML = `<i class="fa-regular fa-calendar mr-1"></i> Tanggal: ${today.toLocaleDateString('id-ID', options)}`;
+            
+            renderQuestions();
+        });
+
+        function renderQuestions() {
+            const tableBody = document.getElementById('quiz-table-body');
+            tableBody.innerHTML = '';
+
+            questionsData.forEach((q, index) => {
+                const tr = document.createElement('tr');
+                tr.className = 'hover:bg-slate-50 transition duration-150';
+                
+                tr.innerHTML = `
+                    <td class="py-3 px-3 text-center font-bold text-slate-500">${q.id}</td>
+                    <td class="py-3 px-4 font-medium text-slate-800">
+                        <span class="block">${q.text}</span>
+                        <span id="explanation-${q.id}" class="hidden text-xs text-slate-500 italic mt-1 border-l-2 border-sky-400 pl-2"></span>
+                    </td>
+                    <td class="py-3 px-4">
+                        <div class="relative">
+                            <select id="select-${q.id}" onchange="updateProgress()" 
+                                class="w-full text-xs md:text-sm px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:bg-white outline-none font-medium text-slate-700 transition cursor-pointer appearance-none pr-8">
+                                <option value="" selected>-- Pilih Perubahan --</option>
+                                <option value="Fisika">Perubahan Fisika</option>
+                                <option value="Kimia">Perubahan Kimia</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500 no-print">
+                                <i class="fa-solid fa-chevron-down text-xs"></i>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="py-3 px-3 text-center no-print" id="status-col-${q.id}">
+                        <span class="inline-block text-xs text-slate-400 font-medium">Belum</span>
+                    </td>
+                `;
+                tableBody.appendChild(tr);
+            });
+        }
+
+        function updateProgress() {
+            let filledCount = 0;
+            questionsData.forEach(q => {
+                const val = document.getElementById(`select-${q.id}`).value;
+                if (val !== "") filledCount++;
+            });
+
+            const percent = (filledCount / questionsData.length) * 100;
+            document.getElementById('progress-bar').style.width = `${percent}%`;
+            document.getElementById('progress-text').innerText = `${filledCount} / ${questionsData.length} Soal`;
+        }
+
+        function toggleMateri() {
+            const content = document.getElementById('materi-content');
+            const icon = document.getElementById('materi-icon');
+            
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                icon.style.transform = 'rotate(180deg)';
+            } else {
+                content.classList.add('hidden');
+                icon.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        function checkAnswers() {
+            const name = document.getElementById('student-name').value.trim();
+            const studentClass = document.getElementById('student-class').value.trim();
+
+            if (!name || !studentClass) {
+                showModal('Identitas Belum Lengkap', 'Silakan lengkapi Nama dan Kelas Anda terlebih dahulu pada bagian atas lembar kerja.', 'warning');
+                scrollToSection('lkpd-content');
+                return;
+            }
+
+            let correct = 0;
+            let wrong = 0;
+            let empty = 0;
+            const explanationsContainer = document.getElementById('explanations-list');
+            explanationsContainer.innerHTML = '';
+
+            questionsData.forEach(q => {
+                const selectEl = document.getElementById(`select-${q.id}`);
+                const statusCol = document.getElementById(`status-col-${q.id}`);
+                const userAns = selectEl.value;
+
+                if (userAns === "") {
+                    empty++;
+                    statusCol.innerHTML = `<span class="px-2 py-1 bg-amber-100 text-amber-800 rounded-md text-xs font-bold"><i class="fa-solid fa-minus"></i> Kosong</span>`;
+                } else if (userAns === q.answer) {
+                    correct++;
+                    statusCol.innerHTML = `<span class="px-2 py-1 bg-emerald-100 text-emerald-800 rounded-md text-xs font-bold"><i class="fa-solid fa-check"></i> Benar</span>`;
+                    selectEl.classList.add('border-emerald-500', 'bg-emerald-50', 'text-emerald-900');
+                } else {
+                    wrong++;
+                    statusCol.innerHTML = `<span class="px-2 py-1 bg-rose-100 text-rose-800 rounded-md text-xs font-bold"><i class="fa-solid fa-xmark"></i> Salah</span>`;
+                    selectEl.classList.add('border-rose-500', 'bg-rose-50', 'text-rose-900');
+                }
+
+                // Add to detailed explanation box
+                const expItem = document.createElement('div');
+                expItem.className = `p-3 rounded-xl border ${userAns === q.answer ? 'bg-emerald-50/50 border-emerald-200' : 'bg-slate-50 border-slate-200'}`;
+                
+                expItem.innerHTML = `
+                    <div class="flex items-start justify-between gap-2">
+                        <div>
+                            <span class="font-bold text-slate-800">${q.id}. ${q.text}</span>
+                            <div class="mt-1 flex flex-wrap gap-2 text-xs">
+                                <span class="text-slate-600">Jawaban Anda: <strong class="${userAns === q.answer ? 'text-emerald-700' : 'text-rose-600'}">${userAns || 'Tidak diisi'}</strong></span>
+                                <span class="text-slate-400">|</span>
+                                <span class="text-slate-600">Jawaban Tepat: <strong class="text-sky-700">Perubahan ${q.answer}</strong></span>
+                            </div>
+                            <p class="mt-1.5 text-slate-600 text-xs italic">${q.reason}</p>
+                        </div>
+                        <div>
+                            ${userAns === q.answer 
+                                ? '<i class="fa-solid fa-circle-check text-emerald-600 text-lg"></i>' 
+                                : '<i class="fa-solid fa-circle-xmark text-rose-500 text-lg"></i>'}
+                        </div>
+                    </div>
+                `;
+                explanationsContainer.appendChild(expItem);
+            });
+
+            // Calculate final score
+            const totalScore = Math.round((correct / questionsData.length) * 100);
+
+            document.getElementById('final-score').innerText = totalScore;
+            document.getElementById('correct-count').innerText = correct;
+            document.getElementById('wrong-count').innerText = wrong;
+            document.getElementById('empty-count').innerText = empty;
+
+            // Generate Feedback Box
+            const feedbackBox = document.getElementById('feedback-box');
+            if (totalScore >= 90) {
+                feedbackBox.className = "p-4 rounded-xl mb-6 text-sm leading-relaxed border bg-emerald-50 border-emerald-300 text-emerald-900";
+                feedbackBox.innerHTML = `<strong><i class="fa-solid fa-award text-emerald-600"></i> Sangat Baik!</strong> Anda telah menguasai konsep perbedaan Perubahan Fisika dan Kimia dengan sangat sempurna. Pertahankan prestasi ini!`;
+            } else if (totalScore >= 75) {
+                feedbackBox.className = "p-4 rounded-xl mb-6 text-sm leading-relaxed border bg-sky-50 border-sky-300 text-sky-900";
+                feedbackBox.innerHTML = `<strong><i class="fa-solid fa-thumbs-up text-sky-600"></i> Baik!</strong> Pemahaman Anda mengenai Perubahan Materi sudah bagus. Pelajari kembali pembahasan pada beberapa soal yang masih keliru.`;
+            } else if (totalScore >= 60) {
+                feedbackBox.className = "p-4 rounded-xl mb-6 text-sm leading-relaxed border bg-amber-50 border-amber-300 text-amber-900";
+                feedbackBox.innerHTML = `<strong><i class="fa-solid fa-circle-exclamation text-amber-600"></i> Cukup!</strong> Anda telah memahami dasar materi, namun perlu meninjau kembali perbedaan mendasar terjadinya zat baru pada perubahan kimia.`;
+            } else {
+                feedbackBox.className = "p-4 rounded-xl mb-6 text-sm leading-relaxed border bg-rose-50 border-rose-300 text-rose-900";
+                feedbackBox.innerHTML = `<strong><i class="fa-solid fa-book-open-reader text-rose-600"></i> Perlu Latihan Lagi!</strong> Bacalah kembali ringkasan materi di atas dan diskusikan dengan guru atau teman sekelas untuk memperdalam pemahaman.`;
+            }
+
+            // Unhide result section
+            document.getElementById('result-section').classList.remove('hidden');
+            scrollToSection('result-section');
+        }
+
+        function resetAnswers() {
+            showModalConfirm("Konfirmasi Reset", "Apakah Anda yakin ingin mengosongkan seluruh jawaban yang telah dipilih?", () => {
+                questionsData.forEach(q => {
+                    const selectEl = document.getElementById(`select-${q.id}`);
+                    selectEl.value = "";
+                    selectEl.className = "w-full text-xs md:text-sm px-3 py-2 bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-sky-500 focus:bg-white outline-none font-medium text-slate-700 transition cursor-pointer appearance-none pr-8";
+                    
+                    const statusCol = document.getElementById(`status-col-${q.id}`);
+                    statusCol.innerHTML = `<span class="inline-block text-xs text-slate-400 font-medium">Belum</span>`;
+                });
+
+                updateProgress();
+                document.getElementById('result-section').classList.add('hidden');
+            });
+        }
+
+        function exportToPDF() {
+            const name = document.getElementById('student-name').value || 'Siswa';
+            const element = document.getElementById('lkpd-content');
+            
+            // Temporary formatting for print/pdf export
+            const options = {
+                margin:       [10, 10, 10, 10],
+                filename:     `LKPD_Perubahan_Zat_${name.replace(/\s+/g, '_')}.pdf`,
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2, useCORS: true },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+
+            // Trigger export
+            html2pdf().set(options).from(element).save();
+        }
+
+        function scrollToSection(id) {
+            const el = document.getElementById(id);
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        function showModal(title, message, type = 'info') {
+            const modal = document.getElementById('custom-modal');
+            const modalTitle = document.getElementById('modal-title');
+            const modalMessage = document.getElementById('modal-message');
+            const modalIcon = document.getElementById('modal-icon');
+            const modalActions = document.getElementById('modal-actions');
+
+            modalTitle.innerText = title;
+            modalMessage.innerText = message;
+
+            if (type === 'warning') {
+                modalIcon.className = "w-12 h-12 rounded-full mx-auto flex items-center justify-center text-2xl mb-3 bg-amber-100 text-amber-600";
+                modalIcon.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i>`;
+            } else {
+                modalIcon.className = "w-12 h-12 rounded-full mx-auto flex items-center justify-center text-2xl mb-3 bg-sky-100 text-sky-600";
+                modalIcon.innerHTML = `<i class="fa-solid fa-circle-info"></i>`;
+            }
+
+            modalActions.innerHTML = `
+                <button onclick="closeModal()" class="px-5 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-xl text-xs font-semibold transition">
+                    Mengerti
+                </button>
+            `;
+
+            modal.classList.remove('hidden');
+        }
+
+        function showModalConfirm(title, message, onConfirm) {
+            const modal = document.getElementById('custom-modal');
+            const modalTitle = document.getElementById('modal-title');
+            const modalMessage = document.getElementById('modal-message');
+            const modalIcon = document.getElementById('modal-icon');
+            const modalActions = document.getElementById('modal-actions');
+
+            modalTitle.innerText = title;
+            modalMessage.innerText = message;
+
+            modalIcon.className = "w-12 h-12 rounded-full mx-auto flex items-center justify-center text-2xl mb-3 bg-rose-100 text-rose-600";
+            modalIcon.innerHTML = `<i class="fa-solid fa-triangle-exclamation"></i>`;
+
+            modalActions.innerHTML = `
+                <button onclick="closeModal()" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-xl text-xs font-semibold transition">
+                    Batal
+                </button>
+                <button id="confirm-btn" class="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-semibold transition">
+                    Ya, Reset
+                </button>
+            `;
+
+            modal.classList.remove('hidden');
+
+            document.getElementById('confirm-btn').onclick = () => {
+                closeModal();
+                onConfirm();
+            };
+        }
+
+        function closeModal() {
+            document.getElementById('custom-modal').classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
